@@ -39,41 +39,21 @@ A Java-based system designed to manage and control application usage in school/c
 
 ---
 
-## Project Structure
-com.labcontrol
-│
-├── cli
-│ └── CommandLineApp.java
-│
-├── engine
-│ └── ProcessMonitor.java
-│
-├── model
-│ └── Policy.java
-│
-├── service
-│ └── PolicyManager.java
-│
-└── Main.java
-
-
----
-
 ## CLI Commands
 
-block-app <app_name>
-block-site <domain>
-set-mode LAB
-status
-start
-exit
+-block-app <app_name>
+-block-site <domain>
+-set-mode LAB
+-status
+-start
+-exit
 
 
 ### Example Usage
-block-app calculator.exe
-block-app chrome.exe
-block-site facebook.com
-start
+-block-app calculator.exe
+-block-app chrome.exe
+-block-site facebook.com
+-start
 
 
 ---
