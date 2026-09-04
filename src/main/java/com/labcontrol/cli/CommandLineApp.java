@@ -1,6 +1,7 @@
 package com.labcontrol.cli;
 
 import com.labcontrol.engine.ProcessMonitor;
+import com.labcontrol.engine.UsageMonitor;
 import com.labcontrol.model.Policy;
 import com.labcontrol.service.PolicyManager;
 
@@ -18,6 +19,7 @@ public class CommandLineApp {
         Policy policy = pm.load();
 
         ProcessMonitor monitor = new ProcessMonitor();
+        UsageMonitor usageMonitor = null;
 
         while (true) {
 
@@ -59,6 +61,13 @@ public class CommandLineApp {
                 case "start":
                     monitor.start(policy);
                     System.out.println("Monitoring started...");
+                    break;
+
+                case "usage-start":
+                    if (usageMonitor == null) {
+                        usageMonitor = new UsageMonitor();
+                    }
+                    usageMonitor.start("576107", "Unknown");
                     break;
 
                 default:
