@@ -16,6 +16,7 @@ public class FirestoreService {
     private final Firestore db;
 
     public FirestoreService() {
+        Firestore tempDb = null;
         try {
             if (FirebaseApp.getApps().isEmpty()) {
                 FirebaseOptions options = FirebaseOptions.builder()
@@ -25,14 +26,17 @@ public class FirestoreService {
 
                 FirebaseApp.initializeApp(options);
             }
-            this.db = FirestoreClient.getFirestore();
-        } catch (IOException e) {
-            System.err.println("Error initializing Firebase Admin SDK: " + e.getMessage());
-            throw new RuntimeException("Failed to initialize Firebase Admin SDK", e);
+            tempDb = FirestoreClient.getFirestore();
+        } catch (Exception e) {
+            System.err.println("Firebase Admin SDK offline / credentials missing: " + e.getMessage());
         }
+        this.db = tempDb;
     }
 
     public void addUsageLog(String classCode, String appName, String processName, String studentName) {
+        if (db == null) {
+            return;
+        }
         try {
             Map<String, Object> docData = new HashMap<>();
             docData.put("appName", appName);
@@ -49,6 +53,25 @@ public class FirestoreService {
             docRef.set(docData).get();
         } catch (Exception e) {
             System.err.println("Error writing log to Firestore: " + e.getMessage());
+        }
+    }
+
+    public void logActivity(String pcName, String appName, String processName, String action) {
+        if (db == null) {
+            return;
+        }
+        try {
+            Map<String, Object> docData = new HashMap<>();
+            docData.put("pcName", pcName);
+            docData.put("appName", appName);
+            docData.put("processName", processName);
+            docData.put("action", action);
+            docData.put("timestamp", System.currentTimeMillis());
+
+            db.collection("pcActivityLogs").document().set(docData);
+            System.out.println("[Firestore] Activity logged: " + pcName + " | " + appName + " | " + action);
+        } catch (Exception e) {
+            System.err.println("Error writing activity log to Firestore: " + e.getMessage());
         }
     }
 
